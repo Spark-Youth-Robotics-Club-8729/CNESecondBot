@@ -26,16 +26,27 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
 
-   private final WPI_VictorSPX frontLeft = new WPI_VictorSPX (1);
-   private final WPI_VictorSPX backLeft = new WPI_VictorSPX (2);
-   private final WPI_VictorSPX frontRight = new WPI_VictorSPX (3);
-   private final WPI_VictorSPX backRight = new WPI_VictorSPX (4);
-   private final MotorControllerGroup leftDrive = new MotorControllerGroup(backLeft, frontLeft);   
-   private final MotorControllerGroup rightDrive = new MotorControllerGroup(backRight, frontRight);
-   private final DifferentialDrive robotDrive = new DifferentialDrive(leftDrive, rightDrive);
+  // drivetrain
+  private final WPI_VictorSPX frontLeft = new WPI_VictorSPX (1);
+  private final WPI_VictorSPX backLeft = new WPI_VictorSPX (2);
+  private final WPI_VictorSPX frontRight = new WPI_VictorSPX (3);
+  private final WPI_VictorSPX backRight = new WPI_VictorSPX (4);
+  private final MotorControllerGroup leftDrive = new MotorControllerGroup(backLeft, frontLeft);   
+  private final MotorControllerGroup rightDrive = new MotorControllerGroup(backRight, frontRight);
+  private final DifferentialDrive robotDrive = new DifferentialDrive(leftDrive, rightDrive);
 
+  // intake mechanism
+  private final CANSparkMax intake = new CANSparkMax(5, MotorType.kBrushless);
+  private final CANSparkMax rotation = new CANSparkMax(6, MotorType.kBrushless);
+
+
+  // joystick
+  private final Joystick driverJoystick = new Joystick(0);
+  private final Joystick operatorJoystick = new Joystick(1);
+  
 
   public void robotInit() {
+    // drivetrain
     rightDrive.setInverted(true);
     frontLeft.setNeutralMode(NeutralMode.Brake);
     backLeft.setNeutralMode(NeutralMode.Brake);
@@ -43,7 +54,6 @@ public class Robot extends TimedRobot {
     backRight.setNeutralMode(NeutralMode.Brake);
   }
 
-  private final Joystick driverJoystick = new Joystick(0);
 
   @Override
   public void robotPeriodic() {}
@@ -59,13 +69,50 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    // intializing speeds
     robotDrive.arcadeDrive(0.0, 0.0);
+    intake.set(0.0);
+    rotation.set(0.0);
   }
 
 
   @Override
   public void teleopPeriodic() {
+    // arcadedrive command
     robotDrive.arcadeDrive(-driverJoystick.getRawAxis(1), driverJoystick.getRawAxis(0));
+
+    //intake command
+    if (operatorJoystick.getRawButtonPressed(0)){
+      intake.set(0.4);
+    } 
+
+    if (operatorJoystick.getRawButtonReleased(0)) {
+      intake.set(0.0);
+    }
+
+    if (operatorJoystick.getRawButtonPressed(8)){
+      intake.set(-0.5);
+    }
+
+    if (operatorJoystick.getRawButtonReleased(8)) {
+      intake.set(0.0);
+    }
+    
+    if (operatorJoystick.getRawButtonPressed(5)){
+      rotation.set(0.3);
+    }
+
+    if (operatorJoystick.getRawButtonReleased(5)) {
+      rotation.set(0.0);
+    }
+
+    if (operatorJoystick.getRawButtonPressed(7)){
+      rotation.set(-0.3);
+    }
+
+    if (operatorJoystick.getRawButtonReleased(7)) {
+      rotation.set(0.0);
+    }
   }
 
 
