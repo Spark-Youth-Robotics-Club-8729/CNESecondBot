@@ -78,42 +78,39 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    // arcadedrive command
+    // Drive command
     robotDrive.arcadeDrive(-driverJoystick.getRawAxis(1), driverJoystick.getRawAxis(0));
-
-    //intake command
-    if (operatorJoystick.getRawButtonPressed(0)){
-      intake.set(0.4);
-    } 
-
-    if (operatorJoystick.getRawButtonReleased(0)) {
-      intake.set(0.0);
-    }
-
-    if (operatorJoystick.getRawButtonPressed(8)){
-      intake.set(-0.5);
-    }
-
-    if (operatorJoystick.getRawButtonReleased(8)) {
-      intake.set(0.0);
-    }
     
-    if (operatorJoystick.getRawButtonPressed(5)){
-      rotation.set(0.3);
-    }
+    // Intake commands
+    handleIntakeButton(operatorJoystick);
 
-    if (operatorJoystick.getRawButtonReleased(5)) {
-      rotation.set(0.0);
-    }
+    // Rotation commands
+    handleRotationButton(operatorJoystick);
+}
 
-    if (operatorJoystick.getRawButtonPressed(7)){
-      rotation.set(-0.3);
+private void handleIntakeButton(Joystick joystick) {
+    if (joystick.getRawButtonPressed(0)) {
+        intake.set(0.4);
+    } else if (joystick.getRawButtonReleased(0)) {
+        intake.set(0.0);
+    } else if (joystick.getRawButtonPressed(8)) {
+        intake.set(-0.5);
+    } else if (joystick.getRawButtonReleased(8)) {
+        intake.set(0.0);
     }
+}
 
-    if (operatorJoystick.getRawButtonReleased(7)) {
-      rotation.set(0.0);
+private void handleRotationButton(Joystick joystick) {
+    if (joystick.getRawButtonPressed(5)) {
+        rotation.set(0.3);
+    } else if (joystick.getRawButtonReleased(5)) {
+        rotation.set(0.0);
+    } else if (joystick.getRawButtonPressed(7)) {
+        rotation.set(-0.3);
+    } else if (joystick.getRawButtonReleased(7)) {
+        rotation.set(0.0);
     }
-  }
+}
 
 
   @Override
