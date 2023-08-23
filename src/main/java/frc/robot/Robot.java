@@ -53,7 +53,7 @@ public class Robot extends TimedRobot {
   private final Joystick operatorJoystick = new Joystick(1);
 
   // drive encoder
-  private final Encoder leftEncoder = new Encoder(0,1);
+  private final Encoder leftEncoder = new Encoder(0, 1);
 
   // gyro
   ADXRS450_Gyro gyro = new ADXRS450_Gyro();
@@ -65,7 +65,7 @@ public class Robot extends TimedRobot {
   int counter;
 
   Timer timer = new Timer();
-  
+
   public void robotInit() {
     // drivetrain
     rightDrive.setInverted(true);
@@ -73,7 +73,7 @@ public class Robot extends TimedRobot {
     backLeft.setNeutralMode(NeutralMode.Brake);
     frontRight.setNeutralMode(NeutralMode.Brake);
     backRight.setNeutralMode(NeutralMode.Brake);
-    leftEncoder.setDistancePerPulse(Math.PI*6/360);
+    leftEncoder.setDistancePerPulse(Math.PI * 6 / 360);
     leftEncoder.setReverseDirection(true);
   }
 
@@ -103,8 +103,7 @@ public class Robot extends TimedRobot {
     if (counter == 0) {
       if (timer.get() < 1) {
         intake.set(0.75);
-      }
-      else {
+      } else {
         intake.set(0.0);
         timer.reset();
         counter++;
@@ -125,7 +124,7 @@ public class Robot extends TimedRobot {
 
     else if (counter == 2) {
       // actual field distance is 230
-      robotDrive.arcadeDrive(pidDrive.calculate(leftEncoder.getDistance(), 50), 0.0); 
+      robotDrive.arcadeDrive(pidDrive.calculate(leftEncoder.getDistance(), 50), 0.0);
       intake.set(-0.4);
 
       if (timer.get() > 2) {
@@ -152,7 +151,7 @@ public class Robot extends TimedRobot {
 
     else if (counter == 4) {
       // actual field distance is 230
-      robotDrive.arcadeDrive(pidDrive.calculate(leftEncoder.getDistance(), 50), 0.0); 
+      robotDrive.arcadeDrive(pidDrive.calculate(leftEncoder.getDistance(), 50), 0.0);
       intake.set(-0.4);
 
       if (timer.get() > 2) {
@@ -168,14 +167,13 @@ public class Robot extends TimedRobot {
     else if (counter == 5) {
       if (timer.get() < 1) {
         intake.set(0.75);
-      }
-      else {
+      } else {
         intake.set(0.0);
         timer.reset();
         counter++;
       }
     }
-      
+
     else if (counter == 6) {
       robotDrive.arcadeDrive(0.0, -pidTurn.calculate(gyro.getAngle(), 180));
 
@@ -190,7 +188,7 @@ public class Robot extends TimedRobot {
 
     else if (counter == 7) {
       // actual field distance is 230
-      robotDrive.arcadeDrive(pidDrive.calculate(leftEncoder.getDistance(), 50), 0.0); 
+      robotDrive.arcadeDrive(pidDrive.calculate(leftEncoder.getDistance(), 50), 0.0);
       intake.set(-0.4);
 
       if (timer.get() > 2) {
