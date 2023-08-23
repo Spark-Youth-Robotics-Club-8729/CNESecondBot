@@ -100,16 +100,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
 
-
-    // if (pid.atSetpoint() == false) {
-      // robotDrive.arcadeDrive(pidDrive.calculate(leftEncoder.getDistance(), 100), 0);
-    // }
-    // else {
-    //   robotDrive.arcadeDrive(0.0, 0.0);
-    // }
-
-    //robotDrive.arcadeDrive(0, -pidTurn.calculate(gyro.getAngle(), 180));
-
     if (counter == 0) {
       if (timer.get() < 1) {
         intake.set(0.75);
@@ -226,6 +216,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     // Drive command
     robotDrive.arcadeDrive(-driverJoystick.getRawAxis(1), -driverJoystick.getRawAxis(0));
+    robotDrive.arcadeDrive(-driverJoystick.getRawAxis(1), driverJoystick.getRawAxis(0));
 
     // Intake commands
     handleIntakeButton(operatorJoystick);
