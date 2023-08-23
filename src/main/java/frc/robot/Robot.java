@@ -312,8 +312,11 @@ public class Robot extends TimedRobot {
       }
     }
     if(counter2 == 1){ 
-      if(gyro.getAngle() > 180.5 || gyro.getAngle() < 180.5){
-        robotDrive.arcadeDrive(0.0, ((180 - gyro.getAngle()) / (180 - gyro.getAngle())) * 0.45);
+      if(gyro.getAngle() > 180.5){
+        robotDrive.arcadeDrive(0.0, -0.45);
+      }
+      if(gyro.getAngle() < 180.5){
+        robotDrive.arcadeDrive(0.0, 0.45);
       }
     }
 
