@@ -59,10 +59,11 @@ public class Robot extends TimedRobot {
   ADXRS450_Gyro gyro = new ADXRS450_Gyro();
 
   // pid
-  PIDController pidDrive = new PIDController(0.015, 0, 0.01);
-  PIDController pidTurn = new PIDController(0.07, 0.0, 0.005);
+  PIDController pidDrive = new PIDController(0.0225, 0, 0.01);
+  PIDController pidTurn = new PIDController(0.025, 0.0002, 0.015);
 
   int counter;
+  int counter2;
 
   Timer timer = new Timer();
 
@@ -75,6 +76,7 @@ public class Robot extends TimedRobot {
     backRight.setNeutralMode(NeutralMode.Brake);
     leftEncoder.setDistancePerPulse(Math.PI * 6 / 360);
     leftEncoder.setReverseDirection(true);
+    pidTurn.setTolerance(3);
   }
 
   @Override
@@ -83,6 +85,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("PID Drive speed", pidDrive.calculate(leftEncoder.getDistance(), 50));
     SmartDashboard.putNumber("Pitch", gyro.getAngle());
     SmartDashboard.putNumber("PID Turn speed", -pidTurn.calculate(gyro.getAngle(), 180));
+    SmartDashboard.putData(pidTurn);
   }
 
   @Override
@@ -124,10 +127,21 @@ public class Robot extends TimedRobot {
 
     else if (counter == 2) {
       // actual field distance is 230
-      robotDrive.arcadeDrive(pidDrive.calculate(leftEncoder.getDistance(), 50), 0.0);
+      if (pidDrive.calculate(leftEncoder.getDistance(), 50) > 0.45) {
+        robotDrive.arcadeDrive(pidDrive.calculate(leftEncoder.getDistance(), 50), 0.0);
+      }
+      else if (leftEncoder.getDistance() < 50){
+        robotDrive.arcadeDrive(0.45, 0.0);
+      }
+
+      else {
+        robotDrive.arcadeDrive(0.0, 0.0);
+      }
+
       intake.set(-0.4);
 
       if (timer.get() > 2) {
+        System.out.println(leftEncoder.getDistance());
         intake.set(0.0);
         robotDrive.arcadeDrive(0.0, 0.0);
         leftEncoder.reset();
@@ -151,10 +165,17 @@ public class Robot extends TimedRobot {
 
     else if (counter == 4) {
       // actual field distance is 230
-      robotDrive.arcadeDrive(pidDrive.calculate(leftEncoder.getDistance(), 50), 0.0);
+      if (pidDrive.calculate(leftEncoder.getDistance(), 50) > 0.45) {
+        robotDrive.arcadeDrive(pidDrive.calculate(leftEncoder.getDistance(), 50), 0.0);
+      }
+      else if (leftEncoder.getDistance() < 50){
+        robotDrive.arcadeDrive(0.45, 0.0);
+      }
+
       intake.set(-0.4);
 
       if (timer.get() > 2) {
+        System.out.println(leftEncoder.getDistance());
         intake.set(0.0);
         robotDrive.arcadeDrive(0.0, 0.0);
         leftEncoder.reset();
@@ -188,10 +209,16 @@ public class Robot extends TimedRobot {
 
     else if (counter == 7) {
       // actual field distance is 230
-      robotDrive.arcadeDrive(pidDrive.calculate(leftEncoder.getDistance(), 50), 0.0);
+      if (pidDrive.calculate(leftEncoder.getDistance(), 50) > 0.45) {
+        robotDrive.arcadeDrive(pidDrive.calculate(leftEncoder.getDistance(), 50), 0.0);
+      }
+      else if (leftEncoder.getDistance() < 50){
+        robotDrive.arcadeDrive(0.45, 0.0);
+      }
       intake.set(-0.4);
 
       if (timer.get() > 2) {
+        System.out.println(leftEncoder.getDistance());
         intake.set(0.0);
         robotDrive.arcadeDrive(0.0, 0.0);
         leftEncoder.reset();
@@ -214,7 +241,6 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     // Drive command
     robotDrive.arcadeDrive(-driverJoystick.getRawAxis(1), -driverJoystick.getRawAxis(0));
-    robotDrive.arcadeDrive(-driverJoystick.getRawAxis(1), driverJoystick.getRawAxis(0));
 
     // Intake commands
     handleIntakeButton(operatorJoystick);
@@ -257,10 +283,44 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
+    gyro.reset();
+    timer.reset();
+    timer.start();
+    counter2 = 0;
   }
 
   @Override
   public void testPeriodic() {
+    
+   /* 
+    if (timer.get() > 1) {
+      if (!pidTurn.atSetpoint()) {
+        robotDrive.arcadeDrive(0.0, -pidTurn.calculate(gyro.getAngle(), 180));
+      }
+      else {
+        robotDrive.arcadeDrive(0.0, 0.0);
+      }
+    } */
+
+    if(counter2 == 0){
+      if(gyro.getAngle() < 170){
+        robotDrive.arcadeDrive(0.0, 0.8);
+      }
+
+      else{
+        counter2++;
+      }
+    }
+    if(counter2 == 1){ 
+      if(gyro.getAngle() > 180.5 || gyro.getAngle() < 180.5){
+        robotDrive.arcadeDrive(0.0, ((180 - gyro.getAngle()) / (180 - gyro.getAngle())) * 0.45);
+      }
+    }
+
+
+
+
+
   }
 
   @Override
