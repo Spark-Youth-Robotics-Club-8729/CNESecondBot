@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANSparkMax;
@@ -67,6 +68,12 @@ public class Robot extends TimedRobot {
 
   Timer timer = new Timer();
 
+  // auto routes
+  private static final String defaultAuto = "2 Cargo Auto";
+  private static final String customAuto = "Balance Auto";
+  private String autoSelected;
+  private final SendableChooser<String> chooser = new SendableChooser<>();
+
   public void robotInit() {
     // drivetrain
     rightDrive.setInverted(true);
@@ -77,6 +84,11 @@ public class Robot extends TimedRobot {
     leftEncoder.setDistancePerPulse(Math.PI * 6 / 360);
     leftEncoder.setReverseDirection(true);
     pidTurn.setTolerance(3);
+
+    // auto chooser
+    chooser.setDefaultOption("2 Cargo Auto", defaultAuto);
+    chooser.addOption("Balance Auto", customAuto);
+    SmartDashboard.putData("Auto Choices", chooser);
   }
 
   @Override
@@ -98,133 +110,219 @@ public class Robot extends TimedRobot {
     intake.set(0.0);
     rotation.set(0.0);
     robotDrive.arcadeDrive(0.0, 0.0);
+    counter2 = 0;
+
+    autoSelected = chooser.getSelected();
   }
 
   @Override
   public void autonomousPeriodic() {
+    if (autoSelected == defaultAuto) {
+      if (counter == 0) {
+        if (timer.get() < 1) {
+          intake.set(0.95);
+        } else {
+          intake.set(0.0);
+          timer.reset();
+          counter++;
+          counter2 = 0;
+        }
+      }
 
-    if (counter == 0) {
-      if (timer.get() < 1) {
-        intake.set(0.75);
-      } else {
-        intake.set(0.0);
-        timer.reset();
-        counter++;
+      else if (counter == 1) {
+        // robotDrive.arcadeDrive(0.0, -pidTurn.calculate(gyro.getAngle(), 180));
+        if (counter2 == 0) {
+          if (gyro.getAngle() < 174) {
+            robotDrive.arcadeDrive(0.0, -0.75);
+          } else {
+            counter2++;
+          }
+        }
+        if (counter2 == 1) {
+          if (gyro.getAngle() > 180.5) {
+            robotDrive.arcadeDrive(0.0, 0.5);
+          }
+          if (gyro.getAngle() < 179.5) {
+            robotDrive.arcadeDrive(0.0, -0.5);
+          } else {
+            robotDrive.arcadeDrive(0.0, 0.0);
+
+          }
+
+          if (timer.get() > 2) {
+            gyro.reset();
+            leftEncoder.reset();
+            robotDrive.arcadeDrive(0.0, 0.0);
+            timer.reset();
+            counter++;
+            counter2 = 0;
+          }
+        }
+      }
+
+      else if (counter == 2) {
+        // actual field distance is 230
+        if (pidDrive.calculate(leftEncoder.getDistance(), 50) > 0.45) {
+          robotDrive.arcadeDrive(pidDrive.calculate(leftEncoder.getDistance(), 50), 0.0);
+        } else if (leftEncoder.getDistance() < 50) {
+          robotDrive.arcadeDrive(0.45, 0.0);
+        }
+
+        else {
+          robotDrive.arcadeDrive(0.0, 0.0);
+        }
+
+        intake.set(-0.4);
+
+        if (timer.get() > 2) {
+          System.out.println(leftEncoder.getDistance());
+          intake.set(0.0);
+          robotDrive.arcadeDrive(0.0, 0.0);
+          leftEncoder.reset();
+          gyro.reset();
+          timer.reset();
+          counter++;
+          counter2 = 0;
+        }
+      }
+
+      else if (counter == 3) {
+        // robotDrive.arcadeDrive(0.0, -pidTurn.calculate(gyro.getAngle(), 180));
+        if (counter2 == 0) {
+          if (gyro.getAngle() < 174) {
+            robotDrive.arcadeDrive(0.0, -0.75);
+          }
+
+          else {
+            counter2++;
+          }
+        }
+        if (counter2 == 1) {
+          if (gyro.getAngle() > 180.5) {
+            robotDrive.arcadeDrive(0.0, 0.5);
+          }
+          if (gyro.getAngle() < 179.5) {
+            robotDrive.arcadeDrive(0.0, -0.5);
+          } else {
+            robotDrive.arcadeDrive(0.0, 0.0);
+          }
+
+          if (timer.get() > 2) {
+            gyro.reset();
+            leftEncoder.reset();
+            robotDrive.arcadeDrive(0.0, 0.0);
+            timer.reset();
+            counter++;
+            counter2 = 0;
+            System.out.println(counter);
+          }
+        }
+      } else if (counter == 4) {
+        // actual field distance is 230
+        System.out.println("Entered 4");
+        if (pidDrive.calculate(leftEncoder.getDistance(), 50) > 0.45) {
+          robotDrive.arcadeDrive(pidDrive.calculate(leftEncoder.getDistance(), 50), 0.0);
+        } else if (leftEncoder.getDistance() < 50) {
+          robotDrive.arcadeDrive(0.45, 0.0);
+        }
+
+        intake.set(-0.4);
+
+        if (timer.get() > 2) {
+          System.out.println(leftEncoder.getDistance());
+          intake.set(0.0);
+          robotDrive.arcadeDrive(0.0, 0.0);
+          leftEncoder.reset();
+          gyro.reset();
+          timer.reset();
+          counter++;
+        }
+      }
+
+      else if (counter == 5) {
+        if (timer.get() < 1) {
+          intake.set(0.75);
+        } else {
+          intake.set(0.0);
+          timer.reset();
+          counter++;
+          counter2 = 0;
+        }
+      }
+
+      else if (counter == 6) {
+        // robotDrive.arcadeDrive(0.0, -pidTurn.calculate(gyro.getAngle(), 180));
+
+        if (counter2 == 0) {
+          if (gyro.getAngle() < 174) {
+            robotDrive.arcadeDrive(0.0, -0.75);
+          }
+
+          else {
+            counter2++;
+          }
+        }
+        if (counter2 == 1) {
+          if (gyro.getAngle() > 180.5) {
+            robotDrive.arcadeDrive(0.0, 0.5);
+          }
+          if (gyro.getAngle() < 179.5) {
+            robotDrive.arcadeDrive(0.0, -0.5);
+          } else {
+            robotDrive.arcadeDrive(0.0, 0.0);
+          }
+
+          if (timer.get() > 2) {
+            gyro.reset();
+            leftEncoder.reset();
+            robotDrive.arcadeDrive(0.0, 0.0);
+            timer.reset();
+            counter++;
+          }
+        }
+      } else if (counter == 7) {
+        // actual field distance is 230
+        if (pidDrive.calculate(leftEncoder.getDistance(), 50) > 0.45) {
+          robotDrive.arcadeDrive(pidDrive.calculate(leftEncoder.getDistance(), 50), 0.0);
+        } else if (leftEncoder.getDistance() < 50) {
+          robotDrive.arcadeDrive(0.45, 0.0);
+        }
+        intake.set(-0.4);
+
+        if (timer.get() > 2) {
+          System.out.println(leftEncoder.getDistance());
+          intake.set(0.0);
+          robotDrive.arcadeDrive(0.0, 0.0);
+          leftEncoder.reset();
+          gyro.reset();
+          timer.reset();
+          counter++;
+        }
       }
     }
 
-    else if (counter == 1) {
-      robotDrive.arcadeDrive(0.0, -pidTurn.calculate(gyro.getAngle(), 180));
-
-      if (timer.get() > 2) {
-        gyro.reset();
-        leftEncoder.reset();
-        robotDrive.arcadeDrive(0.0, 0.0);
-        timer.reset();
-        counter++;
-      }
-    }
-
-    else if (counter == 2) {
-      // actual field distance is 230
-      if (pidDrive.calculate(leftEncoder.getDistance(), 50) > 0.45) {
-        robotDrive.arcadeDrive(pidDrive.calculate(leftEncoder.getDistance(), 50), 0.0);
-      }
-      else if (leftEncoder.getDistance() < 50){
-        robotDrive.arcadeDrive(0.45, 0.0);
-      }
-
-      else {
-        robotDrive.arcadeDrive(0.0, 0.0);
-      }
-
-      intake.set(-0.4);
-
-      if (timer.get() > 2) {
-        System.out.println(leftEncoder.getDistance());
-        intake.set(0.0);
-        robotDrive.arcadeDrive(0.0, 0.0);
-        leftEncoder.reset();
-        gyro.reset();
-        timer.reset();
-        counter++;
-      }
-    }
-
-    else if (counter == 3) {
-      robotDrive.arcadeDrive(0.0, -pidTurn.calculate(gyro.getAngle(), 180));
-
-      if (timer.get() > 2) {
-        gyro.reset();
-        leftEncoder.reset();
-        robotDrive.arcadeDrive(0.0, 0.0);
-        timer.reset();
-        counter++;
-      }
-    }
-
-    else if (counter == 4) {
-      // actual field distance is 230
-      if (pidDrive.calculate(leftEncoder.getDistance(), 50) > 0.45) {
-        robotDrive.arcadeDrive(pidDrive.calculate(leftEncoder.getDistance(), 50), 0.0);
-      }
-      else if (leftEncoder.getDistance() < 50){
-        robotDrive.arcadeDrive(0.45, 0.0);
-      }
-
-      intake.set(-0.4);
-
-      if (timer.get() > 2) {
-        System.out.println(leftEncoder.getDistance());
-        intake.set(0.0);
-        robotDrive.arcadeDrive(0.0, 0.0);
-        leftEncoder.reset();
-        gyro.reset();
-        timer.reset();
-        counter++;
-      }
-    }
-
-    else if (counter == 5) {
-      if (timer.get() < 1) {
-        intake.set(0.75);
-      } else {
-        intake.set(0.0);
-        timer.reset();
-        counter++;
-      }
-    }
-
-    else if (counter == 6) {
-      robotDrive.arcadeDrive(0.0, -pidTurn.calculate(gyro.getAngle(), 180));
-
-      if (timer.get() > 2) {
-        gyro.reset();
-        leftEncoder.reset();
-        robotDrive.arcadeDrive(0.0, 0.0);
-        timer.reset();
-        counter++;
-      }
-    }
-
-    else if (counter == 7) {
-      // actual field distance is 230
-      if (pidDrive.calculate(leftEncoder.getDistance(), 50) > 0.45) {
-        robotDrive.arcadeDrive(pidDrive.calculate(leftEncoder.getDistance(), 50), 0.0);
-      }
-      else if (leftEncoder.getDistance() < 50){
-        robotDrive.arcadeDrive(0.45, 0.0);
-      }
-      intake.set(-0.4);
-
-      if (timer.get() > 2) {
-        System.out.println(leftEncoder.getDistance());
-        intake.set(0.0);
-        robotDrive.arcadeDrive(0.0, 0.0);
-        leftEncoder.reset();
-        gyro.reset();
-        timer.reset();
-        counter++;
+    if (autoSelected == customAuto) {
+      if (counter == 0) {
+        if (timer.get() < 1) {
+          intake.set(0.95);
+        } else {
+          intake.set(0.0);
+          timer.reset();
+          counter++;
+          counter2 = 0;
+        }
+      } 
+      
+      else if (counter == 1) {
+        if (timer.get() < 2) {
+          robotDrive.arcadeDrive(-0.6, 0.0);
+        }
+        else if (leftEncoder.get() > -65) {
+          robotDrive.arcadeDrive(-0.5, 0.0);
+        }
+        else {
+          counter ++;
+        }
       }
     }
   }
@@ -291,38 +389,38 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {
-    
-   /* 
-    if (timer.get() > 1) {
-      if (!pidTurn.atSetpoint()) {
-        robotDrive.arcadeDrive(0.0, -pidTurn.calculate(gyro.getAngle(), 180));
+
+    /*
+     * if (timer.get() > 1) {
+     * if (!pidTurn.atSetpoint()) {
+     * robotDrive.arcadeDrive(0.0, -pidTurn.calculate(gyro.getAngle(), 180));
+     * }
+     * else {
+     * robotDrive.arcadeDrive(0.0, 0.0);
+     * }
+     * }
+     */
+
+    if (counter2 == 0) {
+      if (gyro.getAngle() < 174) {
+        robotDrive.arcadeDrive(0.0, -0.6);
       }
+
       else {
-        robotDrive.arcadeDrive(0.0, 0.0);
-      }
-    } */
-
-    if(counter2 == 0){
-      if(gyro.getAngle() < 170){
-        robotDrive.arcadeDrive(0.0, 0.8);
-      }
-
-      else{
         counter2++;
       }
     }
-    if(counter2 == 1){ 
-      if(gyro.getAngle() > 180.5){
-        robotDrive.arcadeDrive(0.0, -0.45);
-      }
-      if(gyro.getAngle() < 180.5){
+    if (counter2 == 1) {
+      if (gyro.getAngle() > 180.5) {
         robotDrive.arcadeDrive(0.0, 0.45);
       }
+      if (gyro.getAngle() < 179.5) {
+        robotDrive.arcadeDrive(0.0, -0.45);
+      } else {
+        robotDrive.arcadeDrive(0.0, 0.0);
+      }
+
     }
-
-
-
-
 
   }
 
