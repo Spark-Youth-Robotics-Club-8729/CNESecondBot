@@ -4,10 +4,15 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -47,6 +52,20 @@ public class Robot extends TimedRobot {
   private final Joystick driverJoystick = new Joystick(0);
   private final Joystick operatorJoystick = new Joystick(1);
 
+  // drive encoder
+  private final Encoder leftEncoder = new Encoder(0, 1);
+
+  // gyro
+  ADXRS450_Gyro gyro = new ADXRS450_Gyro();
+
+  // pid
+  PIDController pidDrive = new PIDController(0.015, 0, 0.01);
+  PIDController pidTurn = new PIDController(0.07, 0.0, 0.005);
+
+  int counter;
+
+  Timer timer = new Timer();
+
   public void robotInit() {
     // drivetrain
     rightDrive.setInverted(true);
@@ -54,18 +73,133 @@ public class Robot extends TimedRobot {
     backLeft.setNeutralMode(NeutralMode.Brake);
     frontRight.setNeutralMode(NeutralMode.Brake);
     backRight.setNeutralMode(NeutralMode.Brake);
+    leftEncoder.setDistancePerPulse(Math.PI * 6 / 360);
+    leftEncoder.setReverseDirection(true);
   }
 
   @Override
   public void robotPeriodic() {
+    SmartDashboard.putNumber("Left Encoder Distance", leftEncoder.getDistance());
+    SmartDashboard.putNumber("PID Drive speed", pidDrive.calculate(leftEncoder.getDistance(), 50));
+    SmartDashboard.putNumber("Pitch", gyro.getAngle());
+    SmartDashboard.putNumber("PID Turn speed", -pidTurn.calculate(gyro.getAngle(), 180));
   }
 
   @Override
   public void autonomousInit() {
+    leftEncoder.reset();
+    gyro.reset();
+    counter = 0;
+    timer.reset();
+    timer.start();
+    intake.set(0.0);
+    rotation.set(0.0);
+    robotDrive.arcadeDrive(0.0, 0.0);
   }
 
   @Override
   public void autonomousPeriodic() {
+
+    if (counter == 0) {
+      if (timer.get() < 1) {
+        intake.set(0.75);
+      } else {
+        intake.set(0.0);
+        timer.reset();
+        counter++;
+      }
+    }
+
+    else if (counter == 1) {
+      robotDrive.arcadeDrive(0.0, -pidTurn.calculate(gyro.getAngle(), 180));
+
+      if (timer.get() > 2) {
+        gyro.reset();
+        leftEncoder.reset();
+        robotDrive.arcadeDrive(0.0, 0.0);
+        timer.reset();
+        counter++;
+      }
+    }
+
+    else if (counter == 2) {
+      // actual field distance is 230
+      robotDrive.arcadeDrive(pidDrive.calculate(leftEncoder.getDistance(), 50), 0.0);
+      intake.set(-0.4);
+
+      if (timer.get() > 2) {
+        intake.set(0.0);
+        robotDrive.arcadeDrive(0.0, 0.0);
+        leftEncoder.reset();
+        gyro.reset();
+        timer.reset();
+        counter++;
+      }
+    }
+
+    else if (counter == 3) {
+      robotDrive.arcadeDrive(0.0, -pidTurn.calculate(gyro.getAngle(), 180));
+
+      if (timer.get() > 2) {
+        gyro.reset();
+        leftEncoder.reset();
+        robotDrive.arcadeDrive(0.0, 0.0);
+        timer.reset();
+        counter++;
+      }
+    }
+
+    else if (counter == 4) {
+      // actual field distance is 230
+      robotDrive.arcadeDrive(pidDrive.calculate(leftEncoder.getDistance(), 50), 0.0);
+      intake.set(-0.4);
+
+      if (timer.get() > 2) {
+        intake.set(0.0);
+        robotDrive.arcadeDrive(0.0, 0.0);
+        leftEncoder.reset();
+        gyro.reset();
+        timer.reset();
+        counter++;
+      }
+    }
+
+    else if (counter == 5) {
+      if (timer.get() < 1) {
+        intake.set(0.75);
+      } else {
+        intake.set(0.0);
+        timer.reset();
+        counter++;
+      }
+    }
+
+    else if (counter == 6) {
+      robotDrive.arcadeDrive(0.0, -pidTurn.calculate(gyro.getAngle(), 180));
+
+      if (timer.get() > 2) {
+        gyro.reset();
+        leftEncoder.reset();
+        robotDrive.arcadeDrive(0.0, 0.0);
+        timer.reset();
+        counter++;
+      }
+    }
+
+    else if (counter == 7) {
+      // actual field distance is 230
+      robotDrive.arcadeDrive(pidDrive.calculate(leftEncoder.getDistance(), 50), 0.0);
+      intake.set(-0.4);
+
+      if (timer.get() > 2) {
+        intake.set(0.0);
+        robotDrive.arcadeDrive(0.0, 0.0);
+        leftEncoder.reset();
+        gyro.reset();
+        timer.reset();
+        counter++;
+      }
+    }
   }
 
   @Override
@@ -79,6 +213,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     // Drive command
+    robotDrive.arcadeDrive(-driverJoystick.getRawAxis(1), -driverJoystick.getRawAxis(0));
     robotDrive.arcadeDrive(-driverJoystick.getRawAxis(1), driverJoystick.getRawAxis(0));
 
     // Intake commands
