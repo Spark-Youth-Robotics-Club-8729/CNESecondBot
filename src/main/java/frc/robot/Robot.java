@@ -120,7 +120,7 @@ public class Robot extends TimedRobot {
     if (autoSelected == defaultAuto) {
       if (counter == 0) {
         if (timer.get() < 1) {
-          intake.set(0.95);
+          intake.set(0.4); // CHANGE TO 0.95
         } else {
           intake.set(0.0);
           timer.reset();
@@ -132,33 +132,46 @@ public class Robot extends TimedRobot {
       else if (counter == 1) {
         // robotDrive.arcadeDrive(0.0, -pidTurn.calculate(gyro.getAngle(), 180));
         if (counter2 == 0) {
-          if (gyro.getAngle() < 174) {
-            robotDrive.arcadeDrive(0.0, -0.75);
+
+          if(timer.get() < 0.2){
+            rotation.set(-0.3);
+          }else{
+            rotation.set(0.0);
+          }
+          if (gyro.getAngle() < 177) {
+            robotDrive.arcadeDrive(0.0, -0.80);
           } else {
             counter2++;
           }
         }
         if (counter2 == 1) {
           if (gyro.getAngle() > 180.5) {
-            robotDrive.arcadeDrive(0.0, 0.5);
+            robotDrive.arcadeDrive(0.0, 0.64);
+            timer.reset();
           }
-          if (gyro.getAngle() < 179.5) {
-            robotDrive.arcadeDrive(0.0, -0.5);
-          } else {
-            robotDrive.arcadeDrive(0.0, 0.0);
-
+          else if (gyro.getAngle() < 179.5) {
+            robotDrive.arcadeDrive(0.0, -0.71);
+            timer.reset();
+          } 
+          else if(timer.get() < 2 && gyro.getAngle() > 179.5 && gyro.getAngle() < 180.5){
+            robotDrive.arcadeDrive(0.0,0.0);
+            
           }
 
-          if (timer.get() > 2) {
-            gyro.reset();
+
+          if (timer.get() > 2 && gyro.getAngle() > 179.5 && gyro.getAngle() < 180.5) {
+            //gyro.reset();
             leftEncoder.reset();
             robotDrive.arcadeDrive(0.0, 0.0);
             timer.reset();
+            System.out.println("done");
             counter++;
             counter2 = 0;
           }
+
+          }
         }
-      }
+          
 
       else if (counter == 2) {
         // actual field distance is 230
@@ -172,14 +185,19 @@ public class Robot extends TimedRobot {
           robotDrive.arcadeDrive(0.0, 0.0);
         }
 
-        intake.set(-0.4);
+        if(timer.get()< 2){
+        intake.set(-0.5);
+        }
+        else{
+          intake.set(0.0);
+        }
 
         if (timer.get() > 2) {
           System.out.println(leftEncoder.getDistance());
           intake.set(0.0);
           robotDrive.arcadeDrive(0.0, 0.0);
           leftEncoder.reset();
-          gyro.reset();
+          //gyro.reset();
           timer.reset();
           counter++;
           counter2 = 0;
@@ -189,35 +207,41 @@ public class Robot extends TimedRobot {
       else if (counter == 3) {
         // robotDrive.arcadeDrive(0.0, -pidTurn.calculate(gyro.getAngle(), 180));
         if (counter2 == 0) {
-          if (gyro.getAngle() < 174) {
-            robotDrive.arcadeDrive(0.0, -0.75);
-          }
 
-          else {
+          
+          if (gyro.getAngle() > 3.0) {
+            robotDrive.arcadeDrive(0.0, 0.80);
+          } else {
             counter2++;
+            System.out.println("added counter2");
           }
         }
         if (counter2 == 1) {
-          if (gyro.getAngle() > 180.5) {
-            robotDrive.arcadeDrive(0.0, 0.5);
+          System.out.println("Entered turn 2");
+          if (gyro.getAngle() > 0.5) {
+            robotDrive.arcadeDrive(0.0, 0.64);
+            timer.reset();
           }
-          if (gyro.getAngle() < 179.5) {
-            robotDrive.arcadeDrive(0.0, -0.5);
-          } else {
-            robotDrive.arcadeDrive(0.0, 0.0);
+          else if (gyro.getAngle() < -0.5) {
+            robotDrive.arcadeDrive(0.0, -0.71);
+            timer.reset();
+          } 
+          else if (timer.get() < 2 && gyro.getAngle() > -0.5 && gyro.getAngle() < 0.5){
+            robotDrive.arcadeDrive(0.0,0.0);
           }
 
-          if (timer.get() > 2) {
-            gyro.reset();
+
+          if (timer.get() >2 && gyro.getAngle() > -0.5 && gyro.getAngle() < 0.5) {
             leftEncoder.reset();
             robotDrive.arcadeDrive(0.0, 0.0);
             timer.reset();
+            System.out.println("done");
             counter++;
             counter2 = 0;
-            System.out.println(counter);
           }
-        }
-      } else if (counter == 4) {
+      }
+    } 
+      else if (counter == 4) {
         // actual field distance is 230
         System.out.println("Entered 4");
         if (pidDrive.calculate(leftEncoder.getDistance(), 50) > 0.45) {
@@ -226,9 +250,7 @@ public class Robot extends TimedRobot {
           robotDrive.arcadeDrive(0.45, 0.0);
         }
 
-        intake.set(-0.4);
-
-        if (timer.get() > 2) {
+        if (timer.get() > 3) {
           System.out.println(leftEncoder.getDistance());
           intake.set(0.0);
           robotDrive.arcadeDrive(0.0, 0.0);
@@ -240,8 +262,10 @@ public class Robot extends TimedRobot {
       }
 
       else if (counter == 5) {
+        
+        
         if (timer.get() < 1) {
-          intake.set(0.75);
+          intake.set(0.4);
         } else {
           intake.set(0.0);
           timer.reset();
@@ -254,40 +278,49 @@ public class Robot extends TimedRobot {
         // robotDrive.arcadeDrive(0.0, -pidTurn.calculate(gyro.getAngle(), 180));
 
         if (counter2 == 0) {
-          if (gyro.getAngle() < 174) {
-            robotDrive.arcadeDrive(0.0, -0.75);
-          }
 
-          else {
+          if (gyro.getAngle() < 177) {
+            robotDrive.arcadeDrive(0.0, -0.80);
+          } else {
             counter2++;
           }
+
         }
         if (counter2 == 1) {
           if (gyro.getAngle() > 180.5) {
-            robotDrive.arcadeDrive(0.0, 0.5);
+            robotDrive.arcadeDrive(0.0, 0.64);
+            timer.reset();
           }
-          if (gyro.getAngle() < 179.5) {
-            robotDrive.arcadeDrive(0.0, -0.5);
-          } else {
-            robotDrive.arcadeDrive(0.0, 0.0);
+          else if (gyro.getAngle() < 179.5) {
+            robotDrive.arcadeDrive(0.0, -0.71);
+            timer.reset();
+          } 
+          else if(timer.get() < 2 && gyro.getAngle() > 179.5 && gyro.getAngle() < 180.5){
+            robotDrive.arcadeDrive(0.0,0.0);
+  
           }
 
-          if (timer.get() > 2) {
+
+          if (timer.get() > 2 && gyro.getAngle() > 179.5 && gyro.getAngle() < 180.5) {
             gyro.reset();
             leftEncoder.reset();
             robotDrive.arcadeDrive(0.0, 0.0);
             timer.reset();
+            System.out.println("done");
             counter++;
+            counter2 = 0;
+          }
+
           }
         }
-      } else if (counter == 7) {
+         else if (counter == 7) {
         // actual field distance is 230
         if (pidDrive.calculate(leftEncoder.getDistance(), 50) > 0.45) {
           robotDrive.arcadeDrive(pidDrive.calculate(leftEncoder.getDistance(), 50), 0.0);
         } else if (leftEncoder.getDistance() < 50) {
           robotDrive.arcadeDrive(0.45, 0.0);
         }
-        intake.set(-0.4);
+        //intake.set(-0.4);
 
         if (timer.get() > 2) {
           System.out.println(leftEncoder.getDistance());
@@ -300,7 +333,6 @@ public class Robot extends TimedRobot {
         }
       }
     }
-
     if (autoSelected == customAuto) {
       if (counter == 0) {
         if (timer.get() < 1) {
@@ -338,7 +370,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     // Drive command
-    robotDrive.arcadeDrive(-driverJoystick.getRawAxis(1), -driverJoystick.getRawAxis(0));
+    robotDrive.arcadeDrive(-operatorJoystick.getRawAxis(1), -operatorJoystick.getRawAxis(0));
 
     // Intake commands
     handleIntakeButton(operatorJoystick);
@@ -361,11 +393,11 @@ public class Robot extends TimedRobot {
 
   private void handleRotationButton(Joystick joystick) {
     if (joystick.getRawButtonPressed(5)) {
-      rotation.set(0.3);
+      rotation.set(0.4);
     } else if (joystick.getRawButtonReleased(5)) {
       rotation.set(0.0);
     } else if (joystick.getRawButtonPressed(7)) {
-      rotation.set(-0.3);
+      rotation.set(-0.15);
     } else if (joystick.getRawButtonReleased(7)) {
       rotation.set(0.0);
     }
