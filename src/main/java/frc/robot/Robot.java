@@ -66,11 +66,16 @@ public class Robot extends TimedRobot {
   int counter;
   int counter2;
 
+  int intakeButton;
+  int outtakeButton;
+
   Timer timer = new Timer();
 
   // auto routes
   private static final String defaultAuto = "2 Cargo Auto";
   private static final String customAuto = "Balance Auto";
+  private static final String newAuto = "1 cargo Timed Auto";
+
   private String autoSelected;
   private final SendableChooser<String> chooser = new SendableChooser<>();
 
@@ -86,8 +91,10 @@ public class Robot extends TimedRobot {
     pidTurn.setTolerance(3);
 
     // auto chooser
-    chooser.setDefaultOption("2 Cargo Auto", defaultAuto);
+    chooser.setDefaultOption("1 cargo Timed Auto", newAuto);
+    chooser.addOption("2 Cargo Auto", defaultAuto);
     chooser.addOption("Balance Auto", customAuto);
+
     SmartDashboard.putData("Auto Choices", chooser);
   }
 
@@ -120,6 +127,75 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
 
     System.out.println(leftEncoder.getDistance());
+
+    if(autoSelected == newAuto) {
+      if (counter == 0) {
+        if (timer.get() < 1) {
+          intake.set(0.4); // CHANGE TO 0.95
+        } else {
+          intake.set(0.0);
+          timer.reset();
+          counter++;
+          counter2 = 0;
+        }
+      }
+
+      else if(counter == 1){
+        
+        if(timer.get() < 0.5){ // CHANGE AT COMP
+          robotDrive.arcadeDrive(-0.45, 0.0); // CHANGE THIS
+        }
+        else{
+          robotDrive.arcadeDrive(0.0, 0.0);
+          timer.reset();
+          counter++;
+          counter2 = 0;
+        }
+      }
+
+      else if (counter == 2) {
+        // robotDrive.arcadeDrive(0.0, -pidTurn.calculate(gyro.getAngle(), 180));
+        if (counter2 == 0) {
+
+          if(timer.get() < 0.4){
+            rotation.set(-0.4);
+          }else{
+            rotation.set(0.0);
+          }
+          if (gyro.getAngle() < 176) {
+            robotDrive.arcadeDrive(0.0, -0.70);
+          } else {
+            counter2++;
+          }
+        }
+        if (counter2 == 1) {
+          if (gyro.getAngle() > 180.5) {
+            robotDrive.arcadeDrive(0.0, 0.5);
+            timer.reset();
+          }
+          else if (gyro.getAngle() < 179.5) {
+            robotDrive.arcadeDrive(0.0, -0.5);
+            timer.reset();
+          } 
+          else if(timer.get() < 0.5 && gyro.getAngle() > 179.5 && gyro.getAngle() < 180.5){
+            robotDrive.arcadeDrive(0.0,0.0);
+            
+          }
+
+
+          if (timer.get() > 0.5 && gyro.getAngle() > 179.5 && gyro.getAngle() < 180.5) {
+            //gyro.reset();
+            leftEncoder.reset();
+            robotDrive.arcadeDrive(0.0, 0.0);
+            timer.reset();
+            System.out.println("done");
+            counter++;
+            counter2 = 0;
+          }
+
+          }
+        }
+    }
 
     if (autoSelected == defaultAuto) {
       if (counter == 0) {
@@ -179,6 +255,7 @@ public class Robot extends TimedRobot {
 
       else if (counter == 2) {
         // actual field distance is 230
+        /* */
         if (pidDrive.calculate(leftEncoder.getDistance(), 50) > 0.45) {
           robotDrive.arcadeDrive(pidDrive.calculate(leftEncoder.getDistance(), 50), 0.0);
         } else if (leftEncoder.getDistance() < 50) {
@@ -379,7 +456,7 @@ public class Robot extends TimedRobot {
     robotDrive.arcadeDrive(-driverJoystick.getRawAxis(1), -driverJoystick.getRawAxis(4));
 
     // Intake commands
-    handleIntakeButton(operatorJoystick);
+    handleIntakeButton(driverJoystick);
 
     // Rotation commands
     handleRotationButton(operatorJoystick);
@@ -387,22 +464,26 @@ public class Robot extends TimedRobot {
 
   private void handleIntakeButton(Joystick joystick) {
     
-    if (joystick.getRawButtonPressed(6)) {
+    outtakeButton = 6;
+    intakeButton = 5;
+
+    if (joystick.getRawButtonPressed(outtakeButton)) {
       intake.set(0.4);
-    } else if (joystick.getRawButtonReleased(6)) {
+    } else if (joystick.getRawButtonReleased(outtakeButton)) {
       intake.set(0.0);}
       
-     else if(joystick.getRawButtonPressed(8)) {
+     else if(joystick.getRawButtonPressed(intakeButton)) {
       intake.set(-0.5);
-    } else if (joystick.getRawButtonReleased(8)) {
+
+    } else if (joystick.getRawButtonReleased(intakeButton)) {
       intake.set(0.0);
     }
   }
 
   private void handleRotationButton(Joystick joystick) {
-    if (joystick.getRawButtonPressed(5)) {
+    if (joystick.getRawButtonPressed(8)) {
       rotation.set(0.4);
-    } else if (joystick.getRawButtonReleased(5)) {
+    } else if (joystick.getRawButtonReleased(8)) {
       rotation.set(0.0);
     } else if (joystick.getRawButtonPressed(7)) {
       rotation.set(-0.15);
