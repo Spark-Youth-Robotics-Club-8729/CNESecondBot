@@ -15,9 +15,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 /** An example command that uses an example subsystem. */
 public class CubeEngageTimedAuto extends SequentialCommandGroup {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-
-  double setpoint, initialSpeed, initialTolerance, correctionSpeed, correctionTolerance;
-
+  
   /**
    * Creates a new ExampleCommand.
    *

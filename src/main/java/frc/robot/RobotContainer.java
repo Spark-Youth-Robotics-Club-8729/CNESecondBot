@@ -4,7 +4,11 @@
 
 package frc.robot;
 
-import frc.robot.Constants;
+import frc.robot.Constants.controllerConstants;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.RotationConstants;
+import frc.robot.Constants.AutoConstants;
 
 import frc.robot.commands.AutoCommands.commandGroups.CubeMobilityTimedAuto;
 import frc.robot.commands.AutoCommands.commandGroups.CubeMobilityEncoderAuto;
@@ -42,8 +46,8 @@ public class RobotContainer {
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final RotationSubsystem rotationSubsystem = new RotationSubsystem();
 
-  private final Joystick driverController = new Joystick(1);
-  private final Joystick operatorController = new Joystick(2);
+  private final Joystick driverController = new Joystick(controllerConstants.kDriverControllerPort);
+  private final Joystick operatorController = new Joystick(controllerConstants.kOperatorControllerport);
 
   SendableChooser<Command> chooser = new SendableChooser<>();
 
@@ -58,17 +62,17 @@ public class RobotContainer {
 
     driveSubsystem.setDefaultCommand(
         new ArcadeDriveCommand(driveSubsystem,
-            () -> -driverController.getRawAxis(1),
-            () -> -driverController.getRawAxis(4)));
+            () -> -driverController.getRawAxis(DriveConstants.kDriveAxis),
+            () -> -driverController.getRawAxis(DriveConstants.kTurnAxis)));
 
     intakeSubsystem.setDefaultCommand(
         new IntakeCommand(intakeSubsystem,
-            () -> (operatorController.getRawAxis(3) * 2.0)) // outtake
+            () -> (operatorController.getRawAxis(DriveConstants.outtakeButton) * IntakeConstants.outtakeProportions)) // outtake
     );
 
     rotationSubsystem.setDefaultCommand(
         new RotationCommand(rotationSubsystem,
-            () -> (-operatorController.getRawAxis(2) * 0.17) // rotation down
+            () -> (-operatorController.getRawAxis(DriveConstants.rotationDownButton) * RotationConstants.rotationDownProportions) // rotation down
         ));
 
     chooser.setDefaultOption("Cube + Mobility Timed",
@@ -101,12 +105,12 @@ public class RobotContainer {
   private void configureBindings() {
 
     // Intake
-    new JoystickButton(operatorController, 6)
-        .whileTrue(new IntakeCommand(intakeSubsystem, () -> -0.95)); // in
+    new JoystickButton(operatorController, DriveConstants.intakeButton)
+        .whileTrue(new IntakeCommand(intakeSubsystem, () -> (IntakeConstants.intakeSpeed))); // in
 
     // Rotation
-    new JoystickButton(operatorController, 5)
-        .whileTrue(new RotationCommand(rotationSubsystem, () -> 0.65)); // up
+    new JoystickButton(operatorController, DriveConstants.rotationUpButton)
+        .whileTrue(new RotationCommand(rotationSubsystem, () -> RotationConstants.rotationUpSpeed)); // up
   }
 
   public Command getAutonomousCommand() {

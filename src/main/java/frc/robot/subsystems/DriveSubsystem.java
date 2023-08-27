@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Encoder;
@@ -17,10 +18,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveSubsystem extends SubsystemBase {
 
-  private final WPI_VictorSPX frontLeft = new WPI_VictorSPX(1);
-  private final WPI_VictorSPX backLeft = new WPI_VictorSPX(2);
-  private final WPI_VictorSPX frontRight = new WPI_VictorSPX(3);
-  private final WPI_VictorSPX backRight = new WPI_VictorSPX(4);
+  private final WPI_VictorSPX frontLeft = new WPI_VictorSPX(DriveConstants.FRONT_LEFT);
+  private final WPI_VictorSPX backLeft = new WPI_VictorSPX(DriveConstants.BACK_LEFT);
+  private final WPI_VictorSPX frontRight = new WPI_VictorSPX(DriveConstants.FRONT_RIGHT);
+  private final WPI_VictorSPX backRight = new WPI_VictorSPX(DriveConstants.BACK_RIGHT);
 
   private final MotorControllerGroup leftDrive = new MotorControllerGroup(backLeft, frontLeft);
   private final MotorControllerGroup rightDrive = new MotorControllerGroup(backRight, frontRight);
@@ -28,7 +29,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final DifferentialDrive robotDrive = new DifferentialDrive(leftDrive, rightDrive);
 
   // encoder
-  private final Encoder leftEncoder = new Encoder(2, 3);
+  private final Encoder leftEncoder = new Encoder(DriveConstants.encoderChannelA, DriveConstants.encoderChannelB);
 
   // gyro
   ADXRS450_Gyro gyro = new ADXRS450_Gyro();
@@ -42,7 +43,7 @@ public class DriveSubsystem extends SubsystemBase {
     backLeft.setNeutralMode(NeutralMode.Brake);
     frontRight.setNeutralMode(NeutralMode.Brake);
     backRight.setNeutralMode(NeutralMode.Brake);
-    leftEncoder.setDistancePerPulse(Math.PI * 6 / 360);
+    leftEncoder.setDistancePerPulse(DriveConstants.encoderProportions);
     leftEncoder.setReverseDirection(true);
   }
 

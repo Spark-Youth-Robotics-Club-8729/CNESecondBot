@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands.AutoCommands.commandGroups;
+
 import frc.robot.commands.AutoCommands.EncoderDrive;
 import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.IntakeCommand;
@@ -14,8 +15,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 /** An example command that uses an example subsystem. */
 public class CubeEngageEncoderAuto extends SequentialCommandGroup {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
-
-  double setpoint, initialSpeed, initialTolerance, correctionSpeed, correctionTolerance;
 
   /**
    * Creates a new ExampleCommand.

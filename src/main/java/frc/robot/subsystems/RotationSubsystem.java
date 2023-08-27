@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import frc.robot.Constants.RotationConstants;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
@@ -11,7 +12,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class RotationSubsystem extends SubsystemBase {
 
-  private final CANSparkMax rotation = new CANSparkMax(6, MotorType.kBrushless);
+  private final CANSparkMax rotation = new CANSparkMax(RotationConstants.ROTATION_MOTOR_ID, MotorType.kBrushless);
 
   /** Creates a new ExampleSubsystem. */
   public RotationSubsystem() {}
