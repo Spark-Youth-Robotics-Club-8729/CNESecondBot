@@ -13,6 +13,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.AutoCommands.commandGroups.CubeMobilityTimedAuto;
 import frc.robot.commands.AutoCommands.commandGroups.CubeMobilityEncoderAuto;
 import frc.robot.commands.AutoCommands.commandGroups.CubeEngageEncoderAuto;
+import frc.robot.commands.AutoCommands.TurnErrorCommand;
 import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.RotationCommand;
@@ -62,12 +63,13 @@ public class RobotContainer {
 
     driveSubsystem.setDefaultCommand(
         new ArcadeDriveCommand(driveSubsystem,
-            () -> -driverController.getRawAxis(DriveConstants.kDriveAxis),
-            () -> -driverController.getRawAxis(DriveConstants.kTurnAxis)));
+            () -> -(driverController.getRawAxis(DriveConstants.kDriveAxis) * DriveConstants.driveProportions),
+            () -> -(driverController.getRawAxis(DriveConstants.kTurnAxis) * DriveConstants.turnProportions)));
 
     intakeSubsystem.setDefaultCommand(
         new IntakeCommand(intakeSubsystem,
-            () -> (operatorController.getRawAxis(DriveConstants.outtakeButton) * IntakeConstants.outtakeProportions)) // outtake
+            () -> (operatorController.getRawAxis(DriveConstants.outtakeButton) * IntakeConstants.outtakeProportions),
+            false) // outtake
     );
 
     rotationSubsystem.setDefaultCommand(
@@ -106,11 +108,38 @@ public class RobotContainer {
 
     // Intake
     new JoystickButton(operatorController, DriveConstants.intakeButton)
-        .whileTrue(new IntakeCommand(intakeSubsystem, () -> (IntakeConstants.intakeSpeed))); // in
+        .whileTrue(new IntakeCommand(intakeSubsystem, 
+            () -> (IntakeConstants.intakeSpeed), 
+            true)); // in
 
     // Rotation
     new JoystickButton(operatorController, DriveConstants.rotationUpButton)
-        .whileTrue(new RotationCommand(rotationSubsystem, () -> RotationConstants.rotationUpSpeed)); // up
+        .whileTrue(new RotationCommand(rotationSubsystem, 
+            () -> RotationConstants.rotationUpSpeed)); // up
+
+    new JoystickButton(operatorController, DriveConstants.rotation90DegreesUpButton)
+        .onTrue(new RotationCommand(rotationSubsystem, 
+            () -> RotationConstants.rotationUpSpeed)
+            .withTimeout(1.3));
+
+    new JoystickButton(operatorController, DriveConstants.rotation90DegreesUpButton)
+        .onTrue(new RotationCommand(rotationSubsystem, 
+            () -> RotationConstants.rotationDownSpeed)
+            .withTimeout(0.7));
+
+
+    new JoystickButton(driverController, DriveConstants.turn180DegreesButton)
+        .onTrue(new TurnErrorCommand(driveSubsystem, 0.80, 180, 10));
+
+    new JoystickButton(driverController, DriveConstants.slowDriveButton)
+        .onTrue(new ArcadeDriveCommand(driveSubsystem,
+        () -> -(driverController.getRawAxis(DriveConstants.kDriveAxis) * DriveConstants.slowDriveProportions),
+        () -> -(driverController.getRawAxis(DriveConstants.kTurnAxis) * DriveConstants.slowTurnProportions)));
+
+        new JoystickButton(driverController, DriveConstants.speedDriveButton)
+        .onTrue(new ArcadeDriveCommand(driveSubsystem,
+        () -> -(driverController.getRawAxis(DriveConstants.kDriveAxis) * DriveConstants.driveProportions),
+        () -> -(driverController.getRawAxis(DriveConstants.kTurnAxis) * DriveConstants.turnProportions)));
   }
 
   public Command getAutonomousCommand() {

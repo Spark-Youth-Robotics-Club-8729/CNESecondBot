@@ -44,6 +44,14 @@ public final class Constants {
     public static final double driveProportions = 1.0; // drivespeed multiplier
     public static final double turnProportions = 1.0; // turn speed multiplier
 
+    public static final double slowDriveProportions = 0.5;
+    public static final double slowTurnProportions = 0.5;
+
+    public static final int turn180DegreesButton = 4; 
+
+    public static final int slowDriveButton = 7;
+    public static final int speedDriveButton = 8;
+
     // Operator Constants
     // outtake speed = axis * outtakeProportions
     public static final int outtakeButton = 3; // THIS IS AN AXIS.
@@ -54,6 +62,12 @@ public final class Constants {
 
     // rotation down speed = axis * rotationDownProportions
     public static final int rotationDownButton = 2; // THIS IS AN AXIS
+
+    // press once, intake goes up
+    public static final int rotation90DegreesUpButton = 4;
+
+    // press once, intake goes down
+    public static final int rotation90DegreesDownButton = 7; 
 
   }
 
@@ -67,6 +81,8 @@ public final class Constants {
     public static final double outtakeProportions = 2.0;
     public static final double intakeSpeed = -0.95;
 
+    public static final double intakeStallSpeed = 0.45;
+
   }
 
   /****************************************************************/
@@ -77,7 +93,9 @@ public final class Constants {
 
     // teleop rotation speeds
     public static final double rotationUpSpeed = 0.65;
-    public static final double rotationDownProportions = 0.17;
+
+    public static final double rotationDownSpeed = 0.5;
+    public static final double rotationDownProportions = 0.5;
   }
 
   /****************************************************************/

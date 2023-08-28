@@ -60,7 +60,7 @@ public class TurnErrorCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_driveSubsystem.getGyroYaw() > minError){
+    if(Math.abs(m_driveSubsystem.getGyroYaw()) > Math.abs(minError)){
       return true;
     }
     else{

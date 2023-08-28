@@ -12,6 +12,8 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+import frc.robot.Constants.IntakeConstants;
+
 
 
 /** An example command that uses an example subsystem. */
@@ -19,6 +21,7 @@ public class IntakeCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final IntakeSubsystem m_intakeSubsystem;
   private final DoubleSupplier speed;
+  private final boolean stall;
 
 
   /**
@@ -29,6 +32,16 @@ public class IntakeCommand extends CommandBase {
   public IntakeCommand(IntakeSubsystem intakeSubsystem, DoubleSupplier speedFunction) {
     this.m_intakeSubsystem = intakeSubsystem;
     this.speed = speedFunction;
+    this.stall = false;
+
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(m_intakeSubsystem);
+  }
+
+  public IntakeCommand(IntakeSubsystem intakeSubsystem, DoubleSupplier speedFunction, boolean idol) {
+    this.m_intakeSubsystem = intakeSubsystem;
+    this.speed = speedFunction;
+    this.stall = idol;
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_intakeSubsystem);
@@ -47,7 +60,12 @@ public class IntakeCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_intakeSubsystem.setMotor(0.0);
+    if(stall){
+      m_intakeSubsystem.setMotor(IntakeConstants.intakeStallSpeed);
+    }
+    else{
+      m_intakeSubsystem.setMotor(0.0);
+    }
   }
 
   // Returns true when the command should end.
