@@ -67,12 +67,18 @@ public class DriveSubsystem extends SubsystemBase {
     gyro.reset();
   }
 
+  public void logDrive(String command){
+    SmartDashboard.putString("Drive Task:" , command);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Yaw", getGyroYaw());
     SmartDashboard.putNumber("Encoder Left Distance", leftEncoder.getDistance());
     SmartDashboard.putNumber("Left Encoder Distance", leftEncoder.getDistance());
+    SmartDashboard.putNumber("Left Drive Speed", leftDrive.get());
+    SmartDashboard.putNumber("Right Drive Speed", rightDrive.get());
   }
 
   /**

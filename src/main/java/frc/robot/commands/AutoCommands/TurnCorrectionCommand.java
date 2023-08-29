@@ -56,14 +56,15 @@ public class TurnCorrectionCommand extends CommandBase {
       timer.reset();
     } else if (timer.get() < stallTime && m_driveSubsystem.getGyroYaw() > minError && m_driveSubsystem.getGyroYaw() < maxError) {
       m_driveSubsystem.setMotor(0.0, 0.0);
-
     }
+    m_driveSubsystem.logDrive("Correcting turn (Automated) ...");
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_driveSubsystem.setMotor(0.0, 0.0);
+    m_driveSubsystem.logDrive("Stopped - Turn Ended");
   }
 
   // Returns true when the command should end.

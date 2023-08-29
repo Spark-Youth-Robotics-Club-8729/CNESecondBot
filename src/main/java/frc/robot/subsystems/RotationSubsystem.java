@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RotationSubsystem extends SubsystemBase {
 
@@ -19,6 +20,10 @@ public class RotationSubsystem extends SubsystemBase {
 
   public void setMotor(double speed){
     rotation.set(speed);
+  }
+
+  public void logRotation(String command){
+    SmartDashboard.putString("Rotation Task:" , command);
   }
 
   /**
@@ -48,6 +53,8 @@ public class RotationSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
+    SmartDashboard.putNumber("Rotation Speed", rotation.get());
   }
 
   @Override

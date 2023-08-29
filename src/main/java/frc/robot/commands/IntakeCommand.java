@@ -21,7 +21,6 @@ public class IntakeCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final IntakeSubsystem m_intakeSubsystem;
   private final DoubleSupplier speed;
-  private final boolean stall;
 
 
   /**
@@ -32,40 +31,53 @@ public class IntakeCommand extends CommandBase {
   public IntakeCommand(IntakeSubsystem intakeSubsystem, DoubleSupplier speedFunction) {
     this.m_intakeSubsystem = intakeSubsystem;
     this.speed = speedFunction;
-    this.stall = false;
-
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_intakeSubsystem);
-  }
-
-  public IntakeCommand(IntakeSubsystem intakeSubsystem, DoubleSupplier speedFunction, boolean idol) {
-    this.m_intakeSubsystem = intakeSubsystem;
-    this.speed = speedFunction;
-    this.stall = idol;
-
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_intakeSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_intakeSubsystem.setMotor(speed.getAsDouble());
+
+    if(speed.getAsDouble() < 0.0){
+
+      m_intakeSubsystem.setMotor(speed.getAsDouble());
+      m_intakeSubsystem.setStall(true);
+      m_intakeSubsystem.logIntake("Intaking");
+    }
+
+    else if(speed.getAsDouble() > 0.0){
+      m_intakeSubsystem.setMotor(speed.getAsDouble());
+      m_intakeSubsystem.setStall(false);
+      m_intakeSubsystem.logIntake("Outtaking");
+    }
+
+    else if(speed.getAsDouble() == 0.0){
+
+      if(m_intakeSubsystem.getStall() && IntakeConstants.stallAfterIntake){
+        m_intakeSubsystem.setMotor(IntakeConstants.intakeStallSpeed);
+        m_intakeSubsystem.logIntake("Intake Stalling");
+      }
+      else{
+        m_intakeSubsystem.setMotor(speed.getAsDouble());
+  
+        m_intakeSubsystem.logIntake("Intake Stopped");
+      }
+    }
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if(stall){
-      m_intakeSubsystem.setMotor(IntakeConstants.intakeStallSpeed);
-    }
-    else{
-      m_intakeSubsystem.setMotor(0.0);
-    }
+    
+    m_intakeSubsystem.setMotor(0.0);
   }
 
   // Returns true when the command should end.

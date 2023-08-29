@@ -48,6 +48,7 @@ public class TurnErrorCommand extends CommandBase {
   @Override
   public void execute() {
       m_driveSubsystem.setMotor(0.0, turnSpeed);
+      m_driveSubsystem.logDrive("Turning (Automated)");
     
   }
 
@@ -55,6 +56,7 @@ public class TurnErrorCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_driveSubsystem.setMotor(0.0, 0.0);
+    m_driveSubsystem.logDrive("Stopped - Turning Ended");
   }
 
   // Returns true when the command should end.

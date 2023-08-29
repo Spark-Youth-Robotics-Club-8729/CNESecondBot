@@ -35,18 +35,27 @@ public class ArcadeDriveCommand extends CommandBase {
   @Override
   public void initialize() {
 
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     m_driveSubsystem.setMotor(speedFunction.getAsDouble(), turnFunction.getAsDouble());
+
+    if(speedFunction.getAsDouble() < 0.0 || speedFunction.getAsDouble() > 0.0){
+      m_driveSubsystem.logDrive("Driving");
+    }
+    else if(speedFunction.getAsDouble() == 0.0){
+      m_driveSubsystem.logDrive("Stopped");
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_driveSubsystem.setMotor(0.0, 0.0);
+    m_driveSubsystem.logDrive("Driving Ended");
   }
 
   // Returns true when the command should end.

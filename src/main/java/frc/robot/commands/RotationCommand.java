@@ -34,18 +34,34 @@ public class RotationCommand extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     m_rotationSubsystem.setMotor(speed.getAsDouble());
+
+    if(speed.getAsDouble() > 0.0){
+      m_rotationSubsystem.logRotation("Rotating (Up)");
+    }
+
+    if(speed.getAsDouble() < 0.0){
+      m_rotationSubsystem.logRotation("Rotating (Down)");
+    }
+
+    if(speed.getAsDouble() == 0.0){
+      m_rotationSubsystem.logRotation("Rotation Stopped");
+    }
+    
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_rotationSubsystem.setMotor(0.0);
+    m_rotationSubsystem.logRotation("Rotation Stopped");  
   }
 
   // Returns true when the command should end.

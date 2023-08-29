@@ -9,11 +9,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class IntakeSubsystem extends SubsystemBase {
 
   // intake
   private final CANSparkMax intake = new CANSparkMax(IntakeConstants.INTAKE_MOTOR_ID, MotorType.kBrushless);
+
+  private static boolean stall;
 
   /** Creates a new ExampleSubsystem. */
   public IntakeSubsystem() {
@@ -22,6 +25,18 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void setMotor(double speed){
     intake.set(speed);
+  }
+
+  public void logIntake(String command){
+    SmartDashboard.putString("Intake Task:" , command);
+  }
+
+  public void setStall(boolean idol){
+    this.stall = idol;
+  }
+
+  public boolean getStall(){
+    return stall;
   }
 
   /**
@@ -51,6 +66,8 @@ public class IntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
+    SmartDashboard.putNumber("Intake Speed", intake.get());
   }
 
   @Override

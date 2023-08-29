@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -68,8 +69,7 @@ public class RobotContainer {
 
     intakeSubsystem.setDefaultCommand(
         new IntakeCommand(intakeSubsystem,
-            () -> (operatorController.getRawAxis(DriveConstants.outtakeButton) * IntakeConstants.outtakeProportions),
-            false) // outtake
+            () -> (operatorController.getRawAxis(DriveConstants.outtakeButton) * IntakeConstants.outtakeProportions)) // outtake
     );
 
     rotationSubsystem.setDefaultCommand(
@@ -86,7 +86,8 @@ public class RobotContainer {
     chooser.addOption("Cube + Engage Encoder",
         new CubeEngageEncoderAuto(driveSubsystem, intakeSubsystem, rotationSubsystem));
 
-    Shuffleboard.getTab("H202-CMD-BASED").add(chooser);
+    //Shuffleboard.getTab("H2O2-CMD-BASED").add("Auto Choices", chooser);
+    SmartDashboard.putData("Auto Choices", chooser);
 
   }
 
@@ -109,8 +110,7 @@ public class RobotContainer {
     // Intake
     new JoystickButton(operatorController, DriveConstants.intakeButton)
         .whileTrue(new IntakeCommand(intakeSubsystem, 
-            () -> (IntakeConstants.intakeSpeed), 
-            true)); // in
+            () -> (IntakeConstants.intakeSpeed))); // in
 
     // Rotation
     new JoystickButton(operatorController, DriveConstants.rotationUpButton)
@@ -122,14 +122,14 @@ public class RobotContainer {
             () -> RotationConstants.rotationUpSpeed)
             .withTimeout(1.3));
 
-    new JoystickButton(operatorController, DriveConstants.rotation90DegreesUpButton)
+    new JoystickButton(operatorController, DriveConstants.rotation90DegreesDownButton)
         .onTrue(new RotationCommand(rotationSubsystem, 
             () -> RotationConstants.rotationDownSpeed)
             .withTimeout(0.7));
 
 
     new JoystickButton(driverController, DriveConstants.turn180DegreesButton)
-        .onTrue(new TurnErrorCommand(driveSubsystem, 0.80, 180, 10));
+        .onTrue(new TurnErrorCommand(driveSubsystem, 0.80, 180, 10).withTimeout(2.9));
 
     new JoystickButton(driverController, DriveConstants.slowDriveButton)
         .onTrue(new ArcadeDriveCommand(driveSubsystem,
