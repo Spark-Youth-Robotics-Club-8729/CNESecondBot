@@ -128,15 +128,18 @@ public class RobotContainer {
             .withTimeout(0.7));
 
 
+    // turn 180 degrees
     new JoystickButton(driverController, DriveConstants.turn180DegreesButton)
         .onTrue(new TurnErrorCommand(driveSubsystem, 0.80, 180, 10).withTimeout(2.9));
 
+    // slow drive
     new JoystickButton(driverController, DriveConstants.slowDriveButton)
         .onTrue(new ArcadeDriveCommand(driveSubsystem,
         () -> -(driverController.getRawAxis(DriveConstants.kDriveAxis) * DriveConstants.slowDriveProportions),
         () -> -(driverController.getRawAxis(DriveConstants.kTurnAxis) * DriveConstants.slowTurnProportions)));
 
-        new JoystickButton(driverController, DriveConstants.speedDriveButton)
+    // normal drive speed
+    new JoystickButton(driverController, DriveConstants.speedDriveButton)
         .onTrue(new ArcadeDriveCommand(driveSubsystem,
         () -> -(driverController.getRawAxis(DriveConstants.kDriveAxis) * DriveConstants.driveProportions),
         () -> -(driverController.getRawAxis(DriveConstants.kTurnAxis) * DriveConstants.turnProportions)));
