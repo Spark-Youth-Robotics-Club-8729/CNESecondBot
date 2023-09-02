@@ -29,18 +29,18 @@ public class ConeCubeMobilityTimed extends SequentialCommandGroup {
     addCommands(
       new ParallelCommandGroup(
         //new RotationCommand(rotationSubsystem, () -> 0.6).withTimeout(0.8),
-        new ArcadeDriveCommand(driveSubsystem, () -> -0.8, () -> 0.0).withTimeout(0.9)
+        new ArcadeDriveCommand(driveSubsystem, () -> -0.8, () -> 0.0).withTimeout(0.5) // drive backwards, push cone into node. Intake falls down at the same time
       ),
-      //new TurnCorrectionCommand(driveSubsystem, 0.5, 0, 0.5), // probably won't be reliable enough
-      new ArcadeDriveCommand(driveSubsystem, () -> 0.8, () -> 0.0).withTimeout(2.0),
+    
+      new ArcadeDriveCommand(driveSubsystem, () -> 0.8, () -> 0.0).withTimeout(2.0), // drive forward towards 2nd gamepiece
       new ParallelCommandGroup(
-        new ArcadeDriveCommand(driveSubsystem, () -> 0.5, () -> 0.0).withTimeout(2.0),
-        new IntakeCommand(intakeSubsystem, () -> -0.95).withTimeout(2.0)
+        new ArcadeDriveCommand(driveSubsystem, () -> 0.5, () -> 0.0).withTimeout(4.0), // approaching gamepiece - drive slowly
+        new IntakeCommand(intakeSubsystem, () -> -0.95).withTimeout(4.0) // start intake
       ),
-      new TurnSetpointCommand(driveSubsystem),
-      new ArcadeDriveCommand(driveSubsystem, () -> 0.8, () -> 0.0).withTimeout(2.0),
-      new IntakeCommand(intakeSubsystem, () -> 0.95).withTimeout(1.0),
-      new ArcadeDriveCommand(driveSubsystem, () -> -0.8, () -> 0.0).withTimeout(1.0)
+      new TurnSetpointCommand(driveSubsystem), // turn 180 degrees
+      new ArcadeDriveCommand(driveSubsystem, () -> 0.8, () -> 0.0).withTimeout(2.0), // drive towards community zone
+      new IntakeCommand(intakeSubsystem, () -> 0.95).withTimeout(1.0), // shoot cube
+      new ArcadeDriveCommand(driveSubsystem, () -> -0.8, () -> 0.0).withTimeout(1.0) // drive backwards out of community zone
     );
   }
 }
