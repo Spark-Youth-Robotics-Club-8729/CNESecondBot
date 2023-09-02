@@ -41,7 +41,7 @@ public class RotationCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_rotationSubsystem.setMotor(speed.getAsDouble());
+    //m_rotationSubsystem.setMotor(speed.getAsDouble());
 
     if(speed.getAsDouble() > 0.0){
       m_rotationSubsystem.logRotation("Rotating (Up)");

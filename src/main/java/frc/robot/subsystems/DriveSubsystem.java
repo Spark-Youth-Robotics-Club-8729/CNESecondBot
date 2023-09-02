@@ -61,6 +61,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void setMotor(double speed, double turn){
     robotDrive.arcadeDrive(speed, turn);
+    //System.out.println("actual: " + speed + ", " + turn);
   }
 
   public void resetGyro(){

@@ -10,9 +10,11 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.RotationConstants;
 import frc.robot.Constants.AutoConstants;
 
+import frc.robot.commands.AutoCommands.commandGroups.ConeCubeMobilityTimed;
 import frc.robot.commands.AutoCommands.commandGroups.CubeMobilityTimedAuto;
 import frc.robot.commands.AutoCommands.commandGroups.CubeMobilityEncoderAuto;
 import frc.robot.commands.AutoCommands.commandGroups.CubeEngageEncoderAuto;
+
 import frc.robot.commands.AutoCommands.TurnErrorCommand;
 import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.IntakeCommand;
@@ -53,6 +55,7 @@ public class RobotContainer {
 
   SendableChooser<Command> chooser = new SendableChooser<>();
 
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
   /**
@@ -72,12 +75,15 @@ public class RobotContainer {
             () -> (operatorController.getRawAxis(DriveConstants.outtakeButton) * IntakeConstants.outtakeProportions)) // outtake
     );
 
+    /*
     rotationSubsystem.setDefaultCommand(
         new RotationCommand(rotationSubsystem,
             () -> (-operatorController.getRawAxis(DriveConstants.rotationDownButton) * RotationConstants.rotationDownProportions) // rotation down
         ));
-
-    chooser.setDefaultOption("Cube + Mobility Timed",
+      */
+    chooser.setDefaultOption("Cone + Cube + Mobility Timed",
+        new ConeCubeMobilityTimed(driveSubsystem, intakeSubsystem, rotationSubsystem));
+    chooser.addOption("Cube + Mobility Timed",
         new CubeMobilityTimedAuto(driveSubsystem, intakeSubsystem, rotationSubsystem));
     chooser.addOption("Cube + Engage Timed",
         new CubeMobilityEncoderAuto(driveSubsystem, intakeSubsystem, rotationSubsystem));
@@ -86,8 +92,12 @@ public class RobotContainer {
     chooser.addOption("Cube + Engage Encoder",
         new CubeEngageEncoderAuto(driveSubsystem, intakeSubsystem, rotationSubsystem));
 
+    
+
     //Shuffleboard.getTab("H2O2-CMD-BASED").add("Auto Choices", chooser);
     SmartDashboard.putData("Auto Choices", chooser);
+
+    CameraServer.startAutomaticCapture();
 
   }
 
@@ -115,6 +125,7 @@ public class RobotContainer {
             () -> (IntakeConstants.intakeSpeed))); // in
 
     // Rotation
+    /*
     new JoystickButton(operatorController, DriveConstants.rotationUpButton)
         .whileTrue(new RotationCommand(rotationSubsystem, 
             () -> RotationConstants.rotationUpSpeed)); // up
@@ -128,7 +139,7 @@ public class RobotContainer {
         .onTrue(new RotationCommand(rotationSubsystem, 
             () -> RotationConstants.rotationDownSpeed)
             .withTimeout(0.7));
-
+*/
 
     // turn 180 degrees
     new JoystickButton(driverController, DriveConstants.turn180DegreesButton)

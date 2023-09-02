@@ -29,8 +29,8 @@ public class CubeMobilityTimedAuto extends SequentialCommandGroup {
       new IntakeCommand(intakeSubsystem, () -> 0.95).withTimeout(0.6),
       new ArcadeDriveCommand(driveSubsystem, () -> -0.70, () -> 0.0).withTimeout(3.0),
       new ParallelCommandGroup(
-        new TurnSetpointCommand(driveSubsystem),
-        new RotationCommand(rotationSubsystem, () -> -0.4).withTimeout(0.4)
+        new TurnSetpointCommand(driveSubsystem)
+        //new RotationCommand(rotationSubsystem, () -> -0.4).withTimeout(0.4)
       ),
       new ParallelCommandGroup(
         new ArcadeDriveCommand(driveSubsystem, () -> 0.5, () -> 0.0).withTimeout(1),

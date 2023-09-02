@@ -19,7 +19,7 @@ public class RotationSubsystem extends SubsystemBase {
   public RotationSubsystem() {}
 
   public void setMotor(double speed){
-    rotation.set(speed);
+    //rotation.set(speed);
   }
 
   public void logRotation(String command){

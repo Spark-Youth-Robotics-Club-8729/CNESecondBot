@@ -37,7 +37,7 @@ public final class Constants {
     public static final int encoderChannelB = 3;
     public static final double encoderProportions = Math.PI * 6 / 360;
 
-    // Driver Constants
+    /******** Driver Constants *********/
     public static final int kDriveAxis = 1;
     public static final int kTurnAxis = 4;
 
@@ -52,7 +52,8 @@ public final class Constants {
     public static final int slowDriveButton = 1;
     public static final int speedDriveButton = 4;
 
-    // Operator Constants
+    /********* Operator Constants ********/
+    
     // outtake speed = axis * outtakeProportions
     public static final int outtakeButton = 3; // THIS IS AN AXIS.
 

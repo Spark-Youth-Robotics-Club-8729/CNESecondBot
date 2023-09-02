@@ -34,13 +34,13 @@ public class ArcadeDriveCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
-    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+    //System.out.println(speedFunction.getAsDouble() + ", " + turnFunction.getAsDouble());
     m_driveSubsystem.setMotor(speedFunction.getAsDouble(), turnFunction.getAsDouble());
 
     if(speedFunction.getAsDouble() < 0.0 || speedFunction.getAsDouble() > 0.0){
