@@ -24,7 +24,7 @@ public class TurnSetpointCommand extends SequentialCommandGroup {
   public TurnSetpointCommand(DriveSubsystem driveSubsystem) {
 
     addCommands(
-    new TurnErrorCommand(driveSubsystem, -0.80 ,180 ,3),
+    new TurnErrorCommand(driveSubsystem, -0.70 ,180 ,3),
     new TurnCorrectionCommand(driveSubsystem, 0.5, 180, 0.5));
   }
 }

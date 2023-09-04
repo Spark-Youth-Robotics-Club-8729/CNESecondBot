@@ -48,6 +48,8 @@ public class TurnCorrectionCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+    System.out.println(m_driveSubsystem.getGyroYaw());
     if (m_driveSubsystem.getGyroYaw() > maxError) {
       m_driveSubsystem.setMotor(0.0, turnSpeed);
       timer.reset();

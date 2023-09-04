@@ -49,6 +49,8 @@ public class TurnErrorCommand extends CommandBase {
   public void execute() {
       m_driveSubsystem.setMotor(0.0, turnSpeed);
       m_driveSubsystem.logDrive("Turning (Automated)");
+
+      System.out.println(m_driveSubsystem.getGyroYaw());
     
   }
 
@@ -61,8 +63,7 @@ public class TurnErrorCommand extends CommandBase {
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished() {
-    if(Math.abs(m_driveSubsystem.getGyroYaw()) > Math.abs(minError)){
+  public boolean isFinished() {   if(Math.abs(m_driveSubsystem.getGyroYaw()) > Math.abs(minError)){
       return true;
     }
     else{

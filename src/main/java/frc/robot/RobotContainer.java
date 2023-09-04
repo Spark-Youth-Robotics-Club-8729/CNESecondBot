@@ -12,8 +12,12 @@ import frc.robot.Constants.AutoConstants;
 
 import frc.robot.commands.AutoCommands.commandGroups.ConeCubeMobilityTimed;
 import frc.robot.commands.AutoCommands.commandGroups.CubeMobilityTimedAuto;
+import frc.robot.commands.AutoCommands.commandGroups.doNothing;
 import frc.robot.commands.AutoCommands.commandGroups.CubeMobilityEncoderAuto;
 import frc.robot.commands.AutoCommands.commandGroups.CubeEngageEncoderAuto;
+import frc.robot.commands.AutoCommands.commandGroups.doNothing;
+import frc.robot.commands.AutoCommands.commandGroups.ConeMobilityTimed;
+import frc.robot.commands.AutoCommands.commandGroups.ReverseConeMobilityTimed;
 
 import frc.robot.commands.AutoCommands.TurnErrorCommand;
 import frc.robot.commands.ArcadeDriveCommand;
@@ -81,8 +85,22 @@ public class RobotContainer {
             () -> (-operatorController.getRawAxis(DriveConstants.rotationDownButton) * RotationConstants.rotationDownProportions) // rotation down
         ));
       */
-    chooser.setDefaultOption("Cone + Cube + Mobility Timed",
-        new ConeCubeMobilityTimed(driveSubsystem, intakeSubsystem, rotationSubsystem));
+
+    chooser.setDefaultOption("Cone + Mobility Timed",
+      new ConeMobilityTimed(driveSubsystem, intakeSubsystem, rotationSubsystem));
+
+    /*
+    chooser.addOption("Cone + Cube + Mobility Timed",
+      new ConeCubeMobilityTimed(driveSubsystem, intakeSubsystem, rotationSubsystem));
+    */
+
+    chooser.addOption("do nothing", 
+      new doNothing(driveSubsystem, intakeSubsystem, rotationSubsystem));
+
+    chooser.addOption("Red Bump Side - Cone + Mobility",
+      new ReverseConeMobilityTimed(driveSubsystem, intakeSubsystem, rotationSubsystem));
+
+    /*
     chooser.addOption("Cube + Mobility Timed",
         new CubeMobilityTimedAuto(driveSubsystem, intakeSubsystem, rotationSubsystem));
     chooser.addOption("Cube + Engage Timed",
@@ -91,6 +109,7 @@ public class RobotContainer {
         new CubeEngageEncoderAuto(driveSubsystem, intakeSubsystem, rotationSubsystem));
     chooser.addOption("Cube + Engage Encoder",
         new CubeEngageEncoderAuto(driveSubsystem, intakeSubsystem, rotationSubsystem));
+    */
 
     
 
@@ -124,6 +143,10 @@ public class RobotContainer {
         .whileTrue(new IntakeCommand(intakeSubsystem, 
             () -> (IntakeConstants.intakeSpeed))); // in
 
+    new JoystickButton(operatorController, DriveConstants.stopIntakeButton) // kinda useless
+        .onTrue(new IntakeCommand(intakeSubsystem,
+            () -> (0.0)));
+    
     // Rotation
     /*
     new JoystickButton(operatorController, DriveConstants.rotationUpButton)
@@ -142,9 +165,10 @@ public class RobotContainer {
 */
 
     // turn 180 degrees
+    /*
     new JoystickButton(driverController, DriveConstants.turn180DegreesButton)
         .onTrue(new TurnErrorCommand(driveSubsystem, 0.80, 180, 10).withTimeout(2.9));
-
+    */
     // slow drive
     new JoystickButton(driverController, DriveConstants.slowDriveButton)
         .onTrue(new ArcadeDriveCommand(driveSubsystem,
@@ -156,7 +180,11 @@ public class RobotContainer {
         .onTrue(new ArcadeDriveCommand(driveSubsystem,
         () -> -(driverController.getRawAxis(DriveConstants.kDriveAxis) * DriveConstants.driveProportions),
         () -> -(driverController.getRawAxis(DriveConstants.kTurnAxis) * DriveConstants.turnProportions)));
-  }
+  
+    
+
+    }
+
 
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
