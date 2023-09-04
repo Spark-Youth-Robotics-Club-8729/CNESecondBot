@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 public class doNothing extends SequentialCommandGroup {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
-  /**
+  /*
    * Creates a new ExampleCommand.
    * 
    * @param subsystem The subsystem used by this command.

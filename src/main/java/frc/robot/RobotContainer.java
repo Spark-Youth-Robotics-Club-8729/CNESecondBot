@@ -180,14 +180,14 @@ public class RobotContainer {
         .onTrue(new ArcadeDriveCommand(driveSubsystem,
         () -> -(driverController.getRawAxis(DriveConstants.kDriveAxis) * DriveConstants.driveProportions),
         () -> -(driverController.getRawAxis(DriveConstants.kTurnAxis) * DriveConstants.turnProportions)));
-  
-    
 
+
+        
     }
 
 
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
+    // run auto
     return chooser.getSelected();
   }
 }
