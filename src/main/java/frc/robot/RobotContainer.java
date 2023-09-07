@@ -100,16 +100,17 @@ public class RobotContainer {
     chooser.addOption("Red Bump Side - Cone + Mobility",
       new ReverseConeMobilityTimed(driveSubsystem, intakeSubsystem, rotationSubsystem));
 
-    /*
     chooser.addOption("Cube + Mobility Timed",
         new CubeMobilityTimedAuto(driveSubsystem, intakeSubsystem, rotationSubsystem));
+
     chooser.addOption("Cube + Engage Timed",
         new CubeMobilityEncoderAuto(driveSubsystem, intakeSubsystem, rotationSubsystem));
+
     chooser.addOption("2 Cube + Mobility Encoder",
         new CubeEngageEncoderAuto(driveSubsystem, intakeSubsystem, rotationSubsystem));
+
     chooser.addOption("Cube + Engage Encoder",
         new CubeEngageEncoderAuto(driveSubsystem, intakeSubsystem, rotationSubsystem));
-    */
 
     
 
@@ -147,7 +148,8 @@ public class RobotContainer {
         .onTrue(new IntakeCommand(intakeSubsystem,
             () -> (0.0)));
     
-    // Rotation
+
+    // Rotation - disabled due to mechanical issues
     /*
     new JoystickButton(operatorController, DriveConstants.rotationUpButton)
         .whileTrue(new RotationCommand(rotationSubsystem, 
@@ -164,12 +166,14 @@ public class RobotContainer {
             .withTimeout(0.7));
 */
 
-    // turn 180 degrees
+    // turn 180 degrees - useless, skill issue
     /*
     new JoystickButton(driverController, DriveConstants.turn180DegreesButton)
         .onTrue(new TurnErrorCommand(driveSubsystem, 0.80, 180, 10).withTimeout(2.9));
     */
-    // slow drive
+
+    // slow drive - for engage only
+
     new JoystickButton(driverController, DriveConstants.slowDriveButton)
         .onTrue(new ArcadeDriveCommand(driveSubsystem,
         () -> -(driverController.getRawAxis(DriveConstants.kDriveAxis) * DriveConstants.slowDriveProportions),

@@ -30,8 +30,8 @@ public class CubeMobilityEncoderAuto extends SequentialCommandGroup {
       new IntakeCommand(intakeSubsystem, () -> 0.95).withTimeout(0.6),
       new EncoderDrive(driveSubsystem, () -> -0.70, () -> 0.0, 45, true),
       new ParallelCommandGroup(
-        new TurnSetpointCommand(driveSubsystem),
-        new RotationCommand(rotationSubsystem, () -> -0.4).withTimeout(0.4)
+        new TurnSetpointCommand(driveSubsystem)
+        //new RotationCommand(rotationSubsystem, () -> -0.4).withTimeout(0.4)
       ),
       new ParallelCommandGroup(
         new EncoderDrive(driveSubsystem, () -> -0.65, () -> 0.0, 5.0, true),
