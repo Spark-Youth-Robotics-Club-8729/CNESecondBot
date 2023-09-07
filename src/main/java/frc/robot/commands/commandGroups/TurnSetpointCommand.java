@@ -2,10 +2,8 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.AutoCommands.commandGroups;
+package frc.robot.commands.commandGroups;
 
-import frc.robot.commands.AutoCommands.TurnCorrectionCommand;
-import frc.robot.commands.AutoCommands.TurnErrorCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 

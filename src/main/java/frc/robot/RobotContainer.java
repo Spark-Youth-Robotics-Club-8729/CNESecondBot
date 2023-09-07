@@ -9,21 +9,17 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.RotationConstants;
 import frc.robot.Constants.AutoConstants;
-
-import frc.robot.commands.AutoCommands.commandGroups.ConeCubeMobilityTimed;
-import frc.robot.commands.AutoCommands.commandGroups.CubeMobilityTimedAuto;
-import frc.robot.commands.AutoCommands.commandGroups.doNothing;
-import frc.robot.commands.AutoCommands.commandGroups.CubeMobilityEncoderAuto;
-import frc.robot.commands.AutoCommands.commandGroups.CubeEngageEncoderAuto;
-import frc.robot.commands.AutoCommands.commandGroups.doNothing;
-import frc.robot.commands.AutoCommands.commandGroups.ConeMobilityTimed;
-import frc.robot.commands.AutoCommands.commandGroups.ReverseConeMobilityTimed;
-
-import frc.robot.commands.AutoCommands.TurnErrorCommand;
 import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.RotationCommand;
-
+import frc.robot.commands.commandGroups.TurnErrorCommand;
+import frc.robot.commands.commandGroups.autos.ConeCubeMobilityTimed;
+import frc.robot.commands.commandGroups.autos.ConeMobilityTimed;
+import frc.robot.commands.commandGroups.autos.CubeEngageEncoderAuto;
+import frc.robot.commands.commandGroups.autos.CubeMobilityEncoderAuto;
+import frc.robot.commands.commandGroups.autos.CubeMobilityTimedAuto;
+import frc.robot.commands.commandGroups.autos.ReverseConeMobilityTimed;
+import frc.robot.commands.commandGroups.autos.doNothing;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.RotationSubsystem;
@@ -184,9 +180,6 @@ public class RobotContainer {
         .onTrue(new ArcadeDriveCommand(driveSubsystem,
         () -> -(driverController.getRawAxis(DriveConstants.kDriveAxis) * DriveConstants.driveProportions),
         () -> -(driverController.getRawAxis(DriveConstants.kTurnAxis) * DriveConstants.turnProportions)));
-
-
-        
     }
 
 
